@@ -6,34 +6,34 @@ from ui import Ui_MainWindow
 img1 = QtGui.QImage()
 img2 = QtGui.QImage()
 
+
 def updateCollage():
-    img1 = ui.graphic_tabImage1
-    print(img1.size())
-    img2 = ui.graphic_tabImage2
-    print(img2.size())
+    print("img1: ", img1.size())
+    print("img2: ", img2.size())
     img1Height = img1.height()
     img2Height = img2.height()
     # calculate which image is the smallest in height and use
-    # that to set the canvas. width = minHeight / 4 * 9
-    # 300dpi 4in x 9in image = 1200x2700
+    # that to set the canvas. width = minHeight / 4 * 6
+    # 300dpi 4in x 6in image = 1200x1800
     if (img1Height < img2Height):
         height = img1Height
     else:
         height = img2Height
-    width = height / 4 * 9
-    #canvas = QtGui.QPixmap(width, height)
-    canvas = QtGui.QPixmap(1000, 500)
-    left_canvas = QtCore.QRect(0, 0, 500, 500)
-    right_canvas = QtCore.QRect(width/2, 0, width, height)
+    width = height / 4 * 6
+    canvas = QtGui.QPixmap(width, height)
+    left_canvas = QtCore.QRect(0, 0, width/2, height)
+    right_canvas = QtCore.QRect(width/2, 0, width/2, height)
     
     painter = QtGui.QPainter(canvas)
-    painter.drawPixmap(0, 0, 500, 500, img1.pixmap())
-    painter.drawPixmap(500, 0, 500, 500, img2.pixmap())
+    painter.drawImage(left_canvas, img1)
+    painter.drawImage(right_canvas, img2)
     
     try:
         ui.graphic_collage.setPixmap(canvas)
-    finally:
-        painter.end()
+    except:
+        pass
+    
+    painter.end()
 
 
 def openImage1():  
@@ -75,10 +75,12 @@ ui.setupUi(MainWindow)
 MainWindow.show()
 
 # load debug images
-img1.load('/home/uminded/Programming/qt5/python/Print_Collager/1362480432960.jpg')
-img2.load('/home/uminded/Programming/qt5/python/Print_Collager/1369019134720.jpg')
-ui.graphic_tabImage1.setPixmap(QtGui.QPixmap.fromImage(img1))
-ui.graphic_tabImage2.setPixmap(QtGui.QPixmap.fromImage(img2))
+DEBUG = True
+if(DEBUG == True):
+    img1.load('/home/uminded/Programming/qt5/python/Print_Collager/20170831_121950.jpg')
+    img2.load('/home/uminded/Programming/qt5/python/Print_Collager/20170831_121950.jpg') #20170831_122023
+    ui.graphic_tabImage1.setPixmap(QtGui.QPixmap.fromImage(img1))
+    ui.graphic_tabImage2.setPixmap(QtGui.QPixmap.fromImage(img2))
 
 # application code here
 ui.push_tabImage1_open.clicked.connect(openImage1)
