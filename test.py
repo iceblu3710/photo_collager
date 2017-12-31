@@ -5,11 +5,12 @@ from ui import Ui_MainWindow
 
 img1 = QtGui.QImage()
 img2 = QtGui.QImage()
+collage = None
 
 
 def updateCollage():
-    print("img1: ", img1.size())
-    print("img2: ", img2.size())
+    global collage
+
     img1Height = img1.height()
     img2Height = img2.height()
     # calculate which image is the smallest in height and use
@@ -19,31 +20,39 @@ def updateCollage():
         height = img1Height
     else:
         height = img2Height
-    width = height / 4 * 6
-    canvas = QtGui.QPixmap(width, height)
+    
+    # set collage print size
+    size = ui.comboPrintSize.currentText()
+    size = size.split()
+    size.remove('x')
+    
+    width = height / int(size[0]) * int(size[1])
+    collage = QtGui.QPixmap(width, height)
     left_canvas = QtCore.QRect(0, 0, width/2, height)
     right_canvas = QtCore.QRect(width/2, 0, width/2, height)
     
-    painter = QtGui.QPainter(canvas)
+    painter = QtGui.QPainter(collage)
     painter.drawImage(left_canvas, img1)
-    painter.drawImage(right_canvas, img2)
-    
-    try:
-        ui.graphic_collage.setPixmap(canvas)
-    except:
-        pass
-    
+    painter.drawImage(right_canvas, img2)  
+    ui.graphic_collage.setPixmap(collage)
     painter.end()
 
 
 def openImage1():  
+    global img1
     fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(MainWindow,
         "Open Image", ".", "Image Files (*.png *.jpg *.bmp)")
     if fileName:
         img1.load(fileName)
+        if img1.height > 800:
+            img1 = img1.scaled(1000, 800, 1, 1)
         ui.graphic_tabImage1.setPixmap(QtGui.QPixmap.fromImage(img1))
     else:
         pass
+
+
+def rotateImage1():
+    pass
 
 
 def saveImage1():
@@ -51,10 +60,13 @@ def saveImage1():
 
 
 def openImage2():
+    global img2
     fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(MainWindow,
         "Open Image", ".", "Image Files (*.png *.jpg *.bmp)")
     if fileName:
         img2.load(fileName)
+        if img2.height > 800:
+            img2 = img2.scaled(1000, 800, 1, 1)
         ui.graphic_tabImage2.setPixmap(QtGui.QPixmap.fromImage(img2))
     else:
         pass
@@ -65,7 +77,15 @@ def saveImage2():
 
 
 def saveCollage():
-    print("Save collage")
+    global collage
+
+    fileName, fileType = QtWidgets.QFileDialog.getSaveFileName(MainWindow,
+        "Save Image", ".", "Image Files (*.png *.jpg *.bmp)")
+    if fileName:
+        image = collage.toImage()
+        image.save(fileName)
+    else:
+        pass
 
 
 app = QtWidgets.QApplication(sys.argv)
@@ -84,13 +104,13 @@ if(DEBUG == True):
 
 # application code here
 ui.push_tabImage1_open.clicked.connect(openImage1)
+ui.push_tabImage1_rotate.clicked.connect(rotateImage1)
 ui.push_tabImage1_save.clicked.connect(saveImage1)
 ui.push_tabImage2_open.clicked.connect(openImage2)
 ui.push_tabImage2_save.clicked.connect(saveImage2)
-ui.push_collage_save.clicked.connect(updateCollage)
+ui.push_collage_generate.clicked.connect(updateCollage)
+ui.push_collage_save.clicked.connect(saveCollage)
 
 # save each pixmap to a resized variable for the collage
-
-# updateCollage() when the collage tab is cliked
 
 sys.exit(app.exec_())
