@@ -187,8 +187,8 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Print Size:"))
         self.comboPrintSize.setItemText(0, _translate("MainWindow", "4 x 6"))
         self.push_collage_generate.setText(_translate("MainWindow", "Generate"))
-        self.push_collage_save.setText(_translate("MainWindow", "Save Collage"))
-        self.tabImages.setTabText(self.tabImages.indexOf(self.tabCollage), _translate("MainWindow", "Collage"))
+        self.push_collage_save.setText(_translate("MainWindow", "Save self.collage"))
+        self.tabImages.setTabText(self.tabImages.indexOf(self.tabCollage), _translate("MainWindow", "self.collage"))
 
 
 if __name__ == "__main__":
