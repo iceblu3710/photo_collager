@@ -52,7 +52,10 @@ def openImage1():
 
 
 def rotateImage1():
-    pass
+    global img1
+
+    img1 = img1.transformed(QtGui.QTransform().rotate(90))
+    ui.graphic_tabImage1.setPixmap(QtGui.QPixmap.fromImage(img1))
 
 
 def saveImage1():
@@ -70,6 +73,13 @@ def openImage2():
         ui.graphic_tabImage2.setPixmap(QtGui.QPixmap.fromImage(img2))
     else:
         pass
+
+
+def rotateImage2():
+    global img2
+
+    img2 = img2.transformed(QtGui.QTransform().rotate(90))
+    ui.graphic_tabImage2.setPixmap(QtGui.QPixmap.fromImage(img2))
 
 
 def saveImage2():
@@ -107,6 +117,7 @@ ui.push_tabImage1_open.clicked.connect(openImage1)
 ui.push_tabImage1_rotate.clicked.connect(rotateImage1)
 ui.push_tabImage1_save.clicked.connect(saveImage1)
 ui.push_tabImage2_open.clicked.connect(openImage2)
+ui.push_tabImage2_rotate.clicked.connect(rotateImage2)
 ui.push_tabImage2_save.clicked.connect(saveImage2)
 ui.push_collage_generate.clicked.connect(updateCollage)
 ui.push_collage_save.clicked.connect(saveCollage)
