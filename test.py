@@ -17,14 +17,14 @@ class Photo_Collager(Ui_MainWindow):
 
     def run(self):
         # application code here
-        self.ui.push_tabImage1_open.clicked.connect(self.openImage1)
-        self.ui.push_tabImage1_rotate.clicked.connect(self.rotateImage1)
-        self.ui.push_tabImage1_save.clicked.connect(self.saveImage1)
-        self.ui.push_tabImage2_open.clicked.connect(self.openImage2)
-        self.ui.push_tabImage2_rotate.clicked.connect(self.rotateImage2)
-        self.ui.push_tabImage2_save.clicked.connect(self.saveImage2)
+        self.ui.push_tabImage1_open.clicked.connect(self.openImage)
+        self.ui.push_tabImage1_rotate.clicked.connect(self.rotateImage)
+        self.ui.push_tabImage1_save.clicked.connect(self.saveImage)
+        self.ui.push_tabImage2_open.clicked.connect(self.openImage)
+        self.ui.push_tabImage2_rotate.clicked.connect(self.rotateImage)
+        self.ui.push_tabImage2_save.clicked.connect(self.saveImage)
         self.ui.push_collage_generate.clicked.connect(self.updateCollage)
-        self.ui.push_collage_save.clicked.connect(self.saveCollage)
+        self.ui.push_collage_save.clicked.connect(self.saveImage)
 
 
     def updateCollage(self):
@@ -55,54 +55,52 @@ class Photo_Collager(Ui_MainWindow):
         painter.end()
 
 
-    def openImage1(self):  
+    def openImage(self):
+        tab = self.ui.tabImages.currentIndex()
+
         fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(self.MainWindow,
-            "Open Image", ".", "Image Files (*.png *.jpg *.bmp)")
+            "Open Image", ".", "Image Files (*.png *.jpg *.bmp)")      
+                
         if fileName:
-            self.img1.load(fileName)
-            if self.img1.height > 800:
-                self.img1 = self.img1.scaled(1000, 800, 1, 1)
+            if tab == 0:  
+                self.img1.load(fileName)
+                if self.img1.height > 800:
+                    self.img1 = self.img1.scaled(1000, 800, 1, 1)
+                self.ui.graphic_tabImage1.setPixmap(QtGui.QPixmap.fromImage(self.img1))
+            else:
+                self.img2.load(fileName)
+                if self.img2.height > 800:
+                    self.img2 = self.img2.scaled(1000, 800, 1, 1)
+                self.ui.graphic_tabImage2.setPixmap(QtGui.QPixmap.fromImage(self.img2))
+        else:
+            pass
+
+
+    def rotateImage(self):
+        tab = self.ui.tabImages.currentIndex()
+
+        if tab == 0:
+            self.img1 = self.img1.transformed(QtGui.QTransform().rotate(90))
             self.ui.graphic_tabImage1.setPixmap(QtGui.QPixmap.fromImage(self.img1))
-        else:
-            pass
-
-
-    def rotateImage1(self):
-        self.img1 = self.img1.transformed(QtGui.QTransform().rotate(90))
-        self.ui.graphic_tabImage1.setPixmap(QtGui.QPixmap.fromImage(self.img1))
-
-
-    def saveImage1(self):
-        print("Save image 1")
-
-
-    def openImage2(self):
-        fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(self.MainWindow,
-            "Open Image", ".", "Image Files (*.png *.jpg *.bmp)")
-        if fileName:
-            self.img2.load(fileName)
-            if self.img2.height > 800:
-                self.img2 = self.img2.scaled(1000, 800, 1, 1)
+        else: 
+            self.img2 = self.img2.transformed(QtGui.QTransform().rotate(90))
             self.ui.graphic_tabImage2.setPixmap(QtGui.QPixmap.fromImage(self.img2))
-        else:
-            pass
 
 
-    def rotateImage2(self):
-        self.img2 = self.img2.transformed(QtGui.QTransform().rotate(90))
-        self.ui.graphic_tabImage2.setPixmap(QtGui.QPixmap.fromImage(self.img2))
+    def saveImage(self):
+        tab = self.ui.tabImages.currentIndex()
 
-
-    def saveImage2(self):
-        print("Save image 2")
-
-
-    def saveCollage(self):
         fileName, fileType = QtWidgets.QFileDialog.getSaveFileName(self.MainWindow,
             "Save Image", ".", "Image Files (*.png *.jpg *.bmp)")
+
         if fileName:
-            image = self.collage.toImage()
-            image.save(fileName)
+            if tab == 0:
+                print("Save image 1")
+            elif tab == 1: 
+                print("Save image 2")
+            elif tab == 2:
+                image = self.collage.toImage()
+                image.save(fileName)
         else:
             pass
 
