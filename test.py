@@ -3,6 +3,9 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from ui import Ui_MainWindow
 
 
+img1 = QtGui.QImage()
+img2 = QtGui.QImage()
+
 def updateCollage():
     img1 = ui.graphic_tabImage1
     print(img1.size())
@@ -33,13 +36,13 @@ def updateCollage():
         painter.end()
 
 
-def openImage1():
+def openImage1():  
     fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(MainWindow,
         "Open Image", ".", "Image Files (*.png *.jpg *.bmp)")
     if fileName:
-        ui.graphic_tabImage1.setPixmap(QtGui.QPixmap(fileName))
+        img1.load(fileName)
+        ui.graphic_tabImage1.setPixmap(QtGui.QPixmap.fromImage(img1))
     else:
-        # clear the image so size() works
         pass
 
 
@@ -51,9 +54,9 @@ def openImage2():
     fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(MainWindow,
         "Open Image", ".", "Image Files (*.png *.jpg *.bmp)")
     if fileName:
-        ui.graphic_tabImage2.setPixmap(QtGui.QPixmap(fileName))
+        img2.load(fileName)
+        ui.graphic_tabImage2.setPixmap(QtGui.QPixmap.fromImage(img2))
     else:
-        # clear the image so size() works
         pass
 
 
@@ -72,8 +75,10 @@ ui.setupUi(MainWindow)
 MainWindow.show()
 
 # load debug images
-ui.graphic_tabImage1.setPixmap(QtGui.QPixmap('/home/uminded/Programming/qt5/python/Print_Collager/1362480432960.jpg')) #1362480432960
-ui.graphic_tabImage2.setPixmap(QtGui.QPixmap('/home/uminded/Programming/qt5/python/Print_Collager/1369019134720.jpg')) #1369019134720
+img1.load('/home/uminded/Programming/qt5/python/Print_Collager/1362480432960.jpg')
+img2.load('/home/uminded/Programming/qt5/python/Print_Collager/1369019134720.jpg')
+ui.graphic_tabImage1.setPixmap(QtGui.QPixmap.fromImage(img1))
+ui.graphic_tabImage2.setPixmap(QtGui.QPixmap.fromImage(img2))
 
 # application code here
 ui.push_tabImage1_open.clicked.connect(openImage1)
