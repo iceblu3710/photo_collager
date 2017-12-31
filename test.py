@@ -53,53 +53,59 @@ class Photo_Collager(Ui_MainWindow):
         painter.end()
 
     def openImage(self):
-        tab = self.ui.tabImages.currentIndex()
+        tab = self.ui.tabImages.currentWidget().objectName()
 
         fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(
          self.MainWindow, "Open Image", ".", "Image Files (*.png *.jpg *.bmp)")
 
         if fileName:
-            if tab == 0:
+            if tab == 'tabImage1':
                 self.img1.load(fileName)
                 if self.img1.height > 800:
                     self.img1 = self.img1.scaled(1000, 800, 1, 1)
                 self.ui.graphic_tabImage1.setPixmap(
                     QtGui.QPixmap.fromImage(self.img1))
-            else:
+            elif tab == 'tabImage2':
                 self.img2.load(fileName)
                 if self.img2.height > 800:
                     self.img2 = self.img2.scaled(1000, 800, 1, 1)
                 self.ui.graphic_tabImage2.setPixmap(
                     QtGui.QPixmap.fromImage(self.img2))
+            else:
+                print(tab, 'not implemented')
         else:
             pass
 
     def rotateImage(self):
-        tab = self.ui.tabImages.currentIndex()
+        tab = self.ui.tabImages.currentWidget().objectName()
 
-        if tab == 0:
+        if tab == 'tabImage1':
             self.img1 = self.img1.transformed(QtGui.QTransform().rotate(90))
             self.ui.graphic_tabImage1.setPixmap(
                 QtGui.QPixmap.fromImage(self.img1))
-        else:
+        elif tab == 'tabImage2':
             self.img2 = self.img2.transformed(QtGui.QTransform().rotate(90))
             self.ui.graphic_tabImage2.setPixmap(
                 QtGui.QPixmap.fromImage(self.img2))
+        else:
+            print(tab, 'not implemented')
 
     def saveImage(self):
-        tab = self.ui.tabImages.currentIndex()
+        tab = self.ui.tabImages.currentWidget().objectName()
 
         fileName, fileType = QtWidgets.QFileDialog.getSaveFileName(
          self.MainWindow, "Save Image", ".", "Image Files (*.png *.jpg *.bmp)")
 
         if fileName:
-            if tab == 0:
+            if tab == 'tabImage1':
                 print("Save image 1")
-            elif tab == 1:
+            elif tab == 'tabImage2':
                 print("Save image 2")
-            elif tab == 2:
+            elif tab == 'tabCollage':
                 image = self.collage.toImage()
                 image.save(fileName)
+            else:
+                print(tab, 'not implemented')
         else:
             pass
 
