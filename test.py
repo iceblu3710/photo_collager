@@ -9,10 +9,14 @@ class Photo_Collager(QtWidgets.QMainWindow, Ui_MainWindow):
         # class globals
         self.img1 = QtGui.QImage()
         self.img2 = QtGui.QImage()
-        self.collage = None
+        self.collage = QtGui.QPixmap()
         # init ui
         self.setupUi(self)
         self.show()
+        # init QLabel Pixmaps
+        self.graphic_tabImage1.setPixmap(QtGui.QPixmap())
+        self.graphic_tabImage2.setPixmap(QtGui.QPixmap())
+        self.graphic_collage.setPixmap(QtGui.QPixmap())
         # init buttons
         self.push_tabImage1_open.clicked.connect(self.openImage)
         self.push_tabImage1_crop.clicked.connect(self.cropImage)
