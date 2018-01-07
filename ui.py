@@ -30,7 +30,7 @@ class Ui_MainWindow(object):
         self.tabImage1.setObjectName("tabImage1")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.tabImage1)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.graphic_tabImage1 = QtWidgets.QLabel(self.tabImage1)
+        self.graphic_tabImage1 = QSelectionBox(self.tabImage1)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -61,6 +61,9 @@ class Ui_MainWindow(object):
         self.push_tabImage1_rotate = QtWidgets.QPushButton(self.tabImage1)
         self.push_tabImage1_rotate.setObjectName("push_tabImage1_rotate")
         self.horizontalLayout.addWidget(self.push_tabImage1_rotate)
+        self.push_tabImage1_crop = QtWidgets.QPushButton(self.tabImage1)
+        self.push_tabImage1_crop.setObjectName("push_tabImage1_crop")
+        self.horizontalLayout.addWidget(self.push_tabImage1_crop)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem1)
         self.push_tabImage1_save = QtWidgets.QPushButton(self.tabImage1)
@@ -79,7 +82,7 @@ class Ui_MainWindow(object):
         self.gridLayout_4.setObjectName("gridLayout_4")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.graphic_tabImage2 = QtWidgets.QLabel(self.tabImage2)
+        self.graphic_tabImage2 = QSelectionBox(self.tabImage2)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -106,6 +109,9 @@ class Ui_MainWindow(object):
         self.push_tabImage2_rotate = QtWidgets.QPushButton(self.tabImage2)
         self.push_tabImage2_rotate.setObjectName("push_tabImage2_rotate")
         self.horizontalLayout_2.addWidget(self.push_tabImage2_rotate)
+        self.push_tabImage2_crop = QtWidgets.QPushButton(self.tabImage2)
+        self.push_tabImage2_crop.setObjectName("push_tabImage2_crop")
+        self.horizontalLayout_2.addWidget(self.push_tabImage2_crop)
         spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem3)
         self.push_tabImage2_save = QtWidgets.QPushButton(self.tabImage2)
@@ -177,10 +183,12 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.push_tabImage1_open.setText(_translate("MainWindow", "Open Image"))
+        self.push_tabImage1_crop.setText(_translate("MainWindow", "Crop"))
         self.push_tabImage1_rotate.setText(_translate("MainWindow", "Rotate"))
         self.push_tabImage1_save.setText(_translate("MainWindow", "Save Resized"))
         self.tabImages.setTabText(self.tabImages.indexOf(self.tabImage1), _translate("MainWindow", "Image 1"))
         self.push_tabImage2_open.setText(_translate("MainWindow", "Open Image"))
+        self.push_tabImage2_crop.setText(_translate("MainWindow", "Crop"))
         self.push_tabImage2_rotate.setText(_translate("MainWindow", "Rotate"))
         self.push_tabImage2_save.setText(_translate("MainWindow", "Save Resized"))
         self.tabImages.setTabText(self.tabImages.indexOf(self.tabImage2), _translate("MainWindow", "Image 2"))
@@ -190,6 +198,7 @@ class Ui_MainWindow(object):
         self.push_collage_save.setText(_translate("MainWindow", "Save self.collage"))
         self.tabImages.setTabText(self.tabImages.indexOf(self.tabCollage), _translate("MainWindow", "self.collage"))
 
+from qselectionbox import QSelectionBox
 
 if __name__ == "__main__":
     import sys

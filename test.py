@@ -1,29 +1,70 @@
-import sys
+import sys, os
 from PyQt5 import QtWidgets, QtGui, QtCore
 from ui import Ui_MainWindow
 
 
-class Photo_Collager(Ui_MainWindow):
+class Photo_Collager(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
+        QtWidgets.QMainWindow.__init__(self)
+        # class globals
         self.img1 = QtGui.QImage()
         self.img2 = QtGui.QImage()
         self.collage = None
+        # init ui
+        self.setupUi(self)
+        self.show()
+        # init buttons
+        self.push_tabImage1_open.clicked.connect(self.openImage)
+        self.push_tabImage1_crop.clicked.connect(self.cropImage)
+        self.push_tabImage1_rotate.clicked.connect(self.rotateImage)
+        self.push_tabImage1_save.clicked.connect(self.saveImage)
+        self.push_tabImage2_open.clicked.connect(self.openImage)
+        self.push_tabImage2_crop.clicked.connect(self.cropImage)
+        self.push_tabImage2_rotate.clicked.connect(self.rotateImage)
+        self.push_tabImage2_save.clicked.connect(self.saveImage)
+        self.push_collage_generate.clicked.connect(self.updateCollage)
+        self.push_collage_save.clicked.connect(self.saveImage)
+        # QLabel needs to strech to fit pixmap
+        self.graphic_tabImage1.setSizePolicy(QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum))
+        self.verticalLayout.setAlignment(
+            self.graphic_tabImage1, QtCore.Qt.AlignCenter)
+        self.graphic_tabImage2.setSizePolicy(QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum))
+        self.verticalLayout_2.setAlignment(
+            self.graphic_tabImage2, QtCore.Qt.AlignCenter)
+        self.graphic_collage.setSizePolicy(QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum))
+        self.gridLayout_6.setAlignment(
+            self.graphic_collage, QtCore.Qt.AlignCenter)
 
-        self.MainWindow = QtWidgets.QMainWindow()
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self.MainWindow)
-        self.MainWindow.show()
+    def cropImage(self):
+        tab = self.tabImages.currentWidget().objectName()
+        if tab == 'tabImage1':
+            label = self.graphic_tabImage1
+            image = self.img1
+        elif tab == 'tabImage2':
+            label = self.graphic_tabImage2
+            image = self.img2
+        else:
+            return
 
-    def run(self):
-        # application code here
-        self.ui.push_tabImage1_open.clicked.connect(self.openImage)
-        self.ui.push_tabImage1_rotate.clicked.connect(self.rotateImage)
-        self.ui.push_tabImage1_save.clicked.connect(self.saveImage)
-        self.ui.push_tabImage2_open.clicked.connect(self.openImage)
-        self.ui.push_tabImage2_rotate.clicked.connect(self.rotateImage)
-        self.ui.push_tabImage2_save.clicked.connect(self.saveImage)
-        self.ui.push_collage_generate.clicked.connect(self.updateCollage)
-        self.ui.push_collage_save.clicked.connect(self.saveImage)
+        # do the cropping
+        gRect = label.getCoverage()
+        wRect = QtCore.QRect(
+            label.mapFromGlobal(gRect.topLeft()), gRect.size())
+        px = label.pixmap()
+        tr = QtGui.QTransform()
+        tr.scale(px.size().width()*1.0/label.size().width(),
+                px.size().height()*1.0/label.size().height())
+        wRect = tr.mapRect(wRect)
+        label.setPixmap(px.copy(wRect))
+
+        # regen QImage from cropped size
+        if tab == 'tabImage1':
+            self.img1 = px.toImage()
+        elif tab == 'tabImage2':
+            self.img2 = px.toImage()
 
     def updateCollage(self):
         img1Height = self.img1.height()
@@ -35,9 +76,8 @@ class Photo_Collager(Ui_MainWindow):
             height = img1Height
         else:
             height = img2Height
-
         # set self.collage print size
-        size = self.ui.comboPrintSize.currentText()
+        size = self.comboPrintSize.currentText()
         size = size.split()
         size.remove('x')
 
@@ -49,27 +89,27 @@ class Photo_Collager(Ui_MainWindow):
         painter = QtGui.QPainter(self.collage)
         painter.drawImage(left_canvas, self.img1)
         painter.drawImage(right_canvas, self.img2)
-        self.ui.graphic_collage.setPixmap(self.collage)
+        self.graphic_collage.setPixmap(self.collage)
         painter.end()
 
     def openImage(self):
-        tab = self.ui.tabImages.currentWidget().objectName()
+        tab = self.tabImages.currentWidget().objectName()
 
         fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(
-         self.MainWindow, "Open Image", ".", "Image Files (*.png *.jpg *.bmp)")
+         self, "Open Image", ".", "Image Files (*.png *.jpg *.bmp)")
 
         if fileName:
+            image = QtGui.QImage(fileName)
+            if image.height() > 800:
+                image = image.scaled(1000, 800,
+                    QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
             if tab == 'tabImage1':
-                self.img1.load(fileName)
-                if self.img1.height > 800:
-                    self.img1 = self.img1.scaled(1000, 800, 1, 1)
-                self.ui.graphic_tabImage1.setPixmap(
+                self.img1 = image            
+                self.graphic_tabImage1.setPixmap(
                     QtGui.QPixmap.fromImage(self.img1))
             elif tab == 'tabImage2':
-                self.img2.load(fileName)
-                if self.img2.height > 800:
-                    self.img2 = self.img2.scaled(1000, 800, 1, 1)
-                self.ui.graphic_tabImage2.setPixmap(
+                self.img2 = image
+                self.graphic_tabImage2.setPixmap(
                     QtGui.QPixmap.fromImage(self.img2))
             else:
                 print(tab, 'not implemented')
@@ -77,40 +117,48 @@ class Photo_Collager(Ui_MainWindow):
             pass
 
     def rotateImage(self):
-        tab = self.ui.tabImages.currentWidget().objectName()
+        tab = self.tabImages.currentWidget().objectName()
 
         if tab == 'tabImage1':
             self.img1 = self.img1.transformed(QtGui.QTransform().rotate(90))
-            self.ui.graphic_tabImage1.setPixmap(
+            self.graphic_tabImage1.setPixmap(
                 QtGui.QPixmap.fromImage(self.img1))
         elif tab == 'tabImage2':
             self.img2 = self.img2.transformed(QtGui.QTransform().rotate(90))
-            self.ui.graphic_tabImage2.setPixmap(
+            self.graphic_tabImage2.setPixmap(
                 QtGui.QPixmap.fromImage(self.img2))
         else:
             print(tab, 'not implemented')
 
     def saveImage(self):
-        tab = self.ui.tabImages.currentWidget().objectName()
+        tab = self.tabImages.currentWidget().objectName()
 
         fileName, fileType = QtWidgets.QFileDialog.getSaveFileName(
-         self.MainWindow, "Save Image", ".", "Image Files (*.png *.jpg *.bmp)")
-
+         self, "Save Image", ".", "Image Files (*.png *.jpg *.bmp)")
+        
         if fileName:
+            # add extention if required
+            if os.path.splitext(fileName)[-1].lower() == '':
+                fileName += ".jpg"
+            # what tab wants to save?
             if tab == 'tabImage1':
-                print("Save image 1")
+                px = self.graphic_tabImage1
             elif tab == 'tabImage2':
-                print("Save image 2")
+                px = self.graphic_tabImage2
             elif tab == 'tabCollage':
-                image = self.collage.toImage()
-                image.save(fileName)
+                px = self.graphic_collage
             else:
-                print(tab, 'not implemented')
+                print(f"{tab} has no save funtion")    
+            # save the image, fail gracefully
+            try:
+                image = px.pixmap().toImage()
+                image.save(fileName)
+            except AttributeError as error:
+                print(f"{error}\n\tNo image content to save.")
         else:
             pass
 
 
-program = QtWidgets.QApplication(sys.argv)
+myProgram = QtWidgets.QApplication(sys.argv)
 app = Photo_Collager()
-app.run()
-sys.exit(program.exec_())
+sys.exit(myProgram.exec_())
