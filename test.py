@@ -96,6 +96,15 @@ class Photo_Collager(QtWidgets.QMainWindow, Ui_MainWindow):
         self.graphic_collage.setPixmap(self.collage)
         painter.end()
 
+    def scaleQImage(self, image):
+        height = QtWidgets.QApplication.desktop()
+        height = height.screenGeometry().height() - 200
+        if image.height() > height:
+            return image.scaled(1000, height,
+                QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+        else:
+            return image
+
     def openImage(self):
         tab = self.tabImages.currentWidget().objectName()
 
@@ -104,9 +113,7 @@ class Photo_Collager(QtWidgets.QMainWindow, Ui_MainWindow):
 
         if fileName:
             image = QtGui.QImage(fileName)
-            if image.height() > 800:
-                image = image.scaled(1000, 800,
-                    QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+            image = self.scaleQImage(image)
             if tab == 'tabImage1':
                 self.img1 = image            
                 self.graphic_tabImage1.setPixmap(
@@ -125,12 +132,14 @@ class Photo_Collager(QtWidgets.QMainWindow, Ui_MainWindow):
 
         if tab == 'tabImage1':
             self.img1 = self.img1.transformed(QtGui.QTransform().rotate(90))
+            image = self.scaleQImage(self.img1)
             self.graphic_tabImage1.setPixmap(
-                QtGui.QPixmap.fromImage(self.img1))
+                QtGui.QPixmap.fromImage(image))
         elif tab == 'tabImage2':
             self.img2 = self.img2.transformed(QtGui.QTransform().rotate(90))
+            image = self.scaleQImage(self.img2)
             self.graphic_tabImage2.setPixmap(
-                QtGui.QPixmap.fromImage(self.img2))
+                QtGui.QPixmap.fromImage(image))
         else:
             print(tab, 'not implemented')
 

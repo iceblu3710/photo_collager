@@ -181,7 +181,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Photo Collager"))
         self.push_tabImage1_open.setText(_translate("MainWindow", "Open Image"))
         self.push_tabImage1_crop.setText(_translate("MainWindow", "Crop"))
         self.push_tabImage1_rotate.setText(_translate("MainWindow", "Rotate"))
@@ -195,8 +195,8 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Print Size:"))
         self.comboPrintSize.setItemText(0, _translate("MainWindow", "4 x 6"))
         self.push_collage_generate.setText(_translate("MainWindow", "Generate"))
-        self.push_collage_save.setText(_translate("MainWindow", "Save self.collage"))
-        self.tabImages.setTabText(self.tabImages.indexOf(self.tabCollage), _translate("MainWindow", "self.collage"))
+        self.push_collage_save.setText(_translate("MainWindow", "Save Collage"))
+        self.tabImages.setTabText(self.tabImages.indexOf(self.tabCollage), _translate("MainWindow", "Collage"))
 
 from qselectionbox import QSelectionBox
 
