@@ -161,13 +161,13 @@ class Photo_Collager(QtWidgets.QMainWindow, Ui_MainWindow):
             elif tab == 'tabCollage':
                 px = self.graphic_collage
             else:
-                print(f"{tab} has no save funtion")    
+                print("has no save funtion")    
             # save the image, fail gracefully
             try:
                 image = px.pixmap().toImage()
                 image.save(fileName)
             except AttributeError as error:
-                print(f"{error}\n\tNo image content to save.")
+                print("No image content to save")
         else:
             pass
 
